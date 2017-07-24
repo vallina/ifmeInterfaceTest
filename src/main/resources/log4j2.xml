@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="60">
+    <properties>
+        <property name="log.dir">/data/logs/test</property>
+    </properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %1p [%X{logId}] [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+
+        <RollingRandomAccessFile name="Debugger" fileName="${log.dir}/user.debug.log"
+                                 filePattern="${log.dir}/user.debug.log.%d{yyyy-MM-dd}">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %1p [%X{logId}] [%C{1}:%L] - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.hulu" level="info" additivity="true">
+            <AppenderRef ref="Debugger" />
+        </Logger>
+
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+
+</Configuration>
