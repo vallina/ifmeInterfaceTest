@@ -89,8 +89,7 @@
             <stringProp name="filename"></stringProp>
             <stringProp name="parameters"></stringProp>
             <boolProp name="resetInterpreter">false</boolProp>
-            <stringProp name="script">import test3.MD5Utils;
-import test3.ThreeDes;
+            <stringProp name="script">import com.hulu.util.*;
 
 try {
 
@@ -130,9 +129,8 @@ catch (Throwable ex) {
           </RegexExtractor>
           <hashTree/>
           <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell断言" enabled="true">
-            <stringProp name="BeanShellAssertion.query">import test3.MD5Utils;
-import test3.ThreeDes;
-import org.json.*;
+            <stringProp name="BeanShellAssertion.query">import org.json.*;
+import com.hulu.util.*;
 try {
 		int errval = -1;
 		int staval = -1;
