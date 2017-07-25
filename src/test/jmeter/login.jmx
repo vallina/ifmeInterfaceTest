@@ -93,6 +93,7 @@
 
 try {
 
+     log.info("1111111111111111111111111111111111111111111111111111...");
      String jsonStr = vars.get(&quot;jsonString&quot;); 
      System.out.println(&quot;request_data==&quot;+jsonStr);
 
