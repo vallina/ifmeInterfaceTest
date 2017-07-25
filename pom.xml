@@ -71,7 +71,7 @@
                 <configuration>
                     <resultsFileFormat>xml</resultsFileFormat>
                     <ignoreResultFailures>true</ignoreResultFailures>
-
+                    <testResultsTimestamp>false</testResultsTimestamp>
                 </configuration>
                 <executions>
                     <execution>
