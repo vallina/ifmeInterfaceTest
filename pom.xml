@@ -115,7 +115,7 @@
                     <transformationSets>
                         <transformationSet>
                             <dir>${jmeter.result.jtl.dir}</dir>
-                            <stylesheet>src\test\resources\jmeter-results-detail-report_21.xsl</stylesheet>
+                            <stylesheet>src/test/resources/jmeter-results-detail-report_21.xsl</stylesheet>
                             <outputDir>${jmeter.result.html.dir}</outputDir>
                             <fileMappers>
                                 <fileMapper
@@ -126,7 +126,7 @@
                         </transformationSet>
                         <transformationSet>
                             <dir>${jmeter.result.jtl.dir}</dir>
-                            <stylesheet>src\test\resources\jmeter.results.shanhe.me.xsl</stylesheet>
+                            <stylesheet>src/test/resources/jmeter.results.shanhe.me.xsl</stylesheet>
                             <outputDir>${jmeter.result.html.dir1}</outputDir>
                             <fileMappers>
                                 <fileMapper
