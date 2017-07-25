@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.8" jmeter="2.13 r1665067">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="topic" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="host" elementType="Argument">
+            <stringProp name="Argument.name">host</stringProp>
+            <stringProp name="Argument.value">dev.if-chat.com</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">9000</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="api_ver" elementType="Argument">
+            <stringProp name="Argument.name">api_ver</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="uid" elementType="Argument">
+            <stringProp name="Argument.name">uid</stringProp>
+            <stringProp name="Argument.value">102721</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="获取验证码" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1471934849000</longProp>
+        <longProp name="ThreadGroup.end_time">1471934849000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="sms_code" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${key1}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/api/login/sms_codev2?api_ver=${api_ver}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+            <stringProp name="delimiter">\t</stringProp>
+            <stringProp name="fileEncoding">UTF-8</stringProp>
+            <stringProp name="filename">.\datas\friend\sms_code.dat</stringProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">false</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+            <boolProp name="stopThread">true</boolProp>
+            <stringProp name="variableNames">jsonString,errnum1,uid,statusNum1</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="script">import test3.MD5Utils;
+import test3.ThreeDes;
+
+try {
+
+     String jsonStr = vars.get(&quot;jsonString&quot;); 
+     System.out.println(&quot;request_data==&quot;+jsonStr);
+
+     String secretArr = ThreeDes.encode(jsonStr, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);
+	System.out.println(secretArr);
+     
+	vars.put(&quot;key1&quot;,secretArr);
+	
+}
+
+catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+
+</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">returnStr</stringProp>
+            <stringProp name="RegexExtractor.regex">(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">code</stringProp>
+            <stringProp name="RegexExtractor.refname">httpCode</stringProp>
+            <stringProp name="RegexExtractor.regex">^(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell断言" enabled="true">
+            <stringProp name="BeanShellAssertion.query">import test3.MD5Utils;
+import test3.ThreeDes;
+import org.json.*;
+try {
+		int errval = -1;
+		int staval = -1;
+		int codeint = -1;
+
+		//String key = vars.get(&quot;keyStr&quot;);
+		//String iv = vars.get(&quot;ivStr&quot;);
+
+		//System.out.println(key);
+		//System.out.println(iv);
+		
+  		String res = vars.get(&quot;returnStr&quot;);  //获取服务器返回的字符串
+		System.out.println(res);
+		
+		String code = vars.get(&quot;httpCode&quot;);  //获取服务器返回状态码
+		System.out.println(code);
+		codeint = Integer.parseInt(code);  // 将服务器返回的状态码转为int型
+
+		if(codeint == 200){
+			
+              String response_data = ThreeDes.decode(res, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);   //将服务器返回值解密后存放在response_data
+	         System.out.println(&quot;response_data==&quot;+response_data);
+
+			JSONObject data_obj = new JSONObject(response_data);  //将服务器返回值response_data转换为json格式的对象data_obj
+     		String errno_str = data_obj.get(&quot;errno&quot;).toString(); //获取该json对象的errno
+     		System.out.println(errno_str);
+
+     		errval = Integer.parseInt(errno_str);   //获取到服务器返回的errno转为int
+
+     		JSONObject data_obj1 = data_obj.get(&quot;data&quot;);  //获取data子对象
+     		int len11 = data_obj1.length();  //求得data子对象长度
+
+     		System.out.println(&quot;data length is %d:&quot;);
+     		System.out.println(len11);
+
+     		if(len11 != 0){  // data子对象有数据
+     			//String status_str = data_obj.get(&quot;data&quot;).get(&quot;amount&quot;).toString(); // 获取amount
+     			//int joinLen = status_str.length();
+     			
+     			String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+				
+
+     			if( errno_str.equals(err1)){
+     					System.out.println(&quot;pass&quot;);
+     				}
+     			else{
+     					System.out.println(&quot;failed&quot;);
+    			 			Failure = true;
+    			 			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+    			 			System.out.println(jsonStr1);
+    			 			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+     				}
+     		}
+
+     		 else{ //data子对象为空
+     		 		System.out.println(&quot;data is kong.&quot;);
+         			 	String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+
+					if( errno_str.equals(err1)) {
+						System.out.println(&quot;pass&quot;);
+							}
+    					else{
+    	 					System.out.println(&quot;failed&quot;);
+    				 		Failure = true;
+
+    			   			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     					System.out.println(jsonStr1);
+    				 		FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+   		 				} 			 	
+     		 	}	
+			}
+
+		else{
+				System.out.println(&quot;failed&quot;); //服务器返回状态码非200
+     			System.out.println(code); //打印输出服务器实际返回状态码
+    				Failure = true;
+    
+    				String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     			System.out.println(jsonStr1);
+     			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+			
+			}		
+
+		}
+
+  catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+</stringProp>
+            <stringProp name="BeanShellAssertion.filename"></stringProp>
+            <stringProp name="BeanShellAssertion.parameters"></stringProp>
+            <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+          </BeanShellAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="用表格察看结果" enabled="false">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="false">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="聚合报告" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="登录" enabled="false">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1471593341000</longProp>
+        <longProp name="ThreadGroup.end_time">1471593341000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="login" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${key1}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/api/login/loginv2?api_ver=${api_ver}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+            <stringProp name="delimiter">\t</stringProp>
+            <stringProp name="fileEncoding">UTF-8</stringProp>
+            <stringProp name="filename">.\datas\friend\login.dat</stringProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">false</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+            <boolProp name="stopThread">true</boolProp>
+            <stringProp name="variableNames">jsonString,errnum1,uid,statusNum1</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">returnStr</stringProp>
+            <stringProp name="RegexExtractor.regex">(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">code</stringProp>
+            <stringProp name="RegexExtractor.refname">httpCode</stringProp>
+            <stringProp name="RegexExtractor.regex">^(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="script">import test3.MD5Utils;
+import test3.ThreeDes;
+
+try {
+
+     String jsonStr = vars.get(&quot;jsonString&quot;); 
+
+     System.out.println(&quot;request_data==&quot;+jsonStr);
+
+     String secretArr = ThreeDes.encode(jsonStr, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);
+	
+	System.out.println(secretArr);
+     
+	vars.put(&quot;key1&quot;,secretArr);
+	
+}
+
+catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+
+</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+          <BeanShellPostProcessor guiclass="TestBeanGUI" testclass="BeanShellPostProcessor" testname="BeanShell PostProcessor" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import test3.MD5Utils;
+import test3.ThreeDes;
+import org.json.*;
+import java.net.URLEncoder;
+
+try {
+		System.out.println(&quot;PostProcessor...........................&quot;);
+		int errval = -1;
+		int staval = -1;
+		int codeint = -1;
+
+		String res = vars.get(&quot;returnStr&quot;);  //获取服务器返回的字符串
+		System.out.println(res);
+		
+		String code = vars.get(&quot;httpCode&quot;);  //获取服务器返回状态码
+		System.out.println(code);
+
+		codeint = Integer.parseInt(code);  // 将服务器返回的状态码转为int型
+		if(codeint == 200){
+			System.out.println(&quot;hahahhahahahh&quot;);
+			String response_data = ThreeDes.decode(res, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);//将服务器返回值解密后存放在response_data
+	         	System.out.println(&quot;response_data==&quot;+response_data);
+
+	         	JSONObject data_obj = new JSONObject(response_data); //将服务器返回值response_data转换为json格式的对象data_obj
+     		String errno_str = data_obj.get(&quot;errno&quot;).toString(); //
+			System.out.println(&quot;errno_str is : &quot; + errno_str);
+
+     		errval = Integer.parseInt(errno_str);   //获取到服务器返回的errno转为int
+
+     		JSONObject data_obj1 = data_obj.get(&quot;data&quot;);  //获取data子对象
+     		int len11 = data_obj1.length();  //求得data子对象长度
+
+     		if(len11 != 0){ 
+     			System.out.println(&quot;data is not kong! errno is not 0!&quot;);	
+     			String token_str = data_obj1.get(&quot;token&quot;).toString(); 
+     			System.out.println(&quot;token_str is &quot; + token_str);
+
+				String encode = URLEncoder.encode(token_str);
+                    //System.out.print(encode);
+                    
+     			props.put(&quot;utoken&quot;,token_str);
+     			props.put(&quot;mytoken&quot;, encode);
+
+     			}
+     		else{
+     			System.out.println(&quot;data is kong! errno is not 0!&quot;);	
+     		}
+	         	
+		}
+		else{
+				System.out.println(&quot;failed&quot;); //服务器返回状态码非200
+     			System.out.println(code); //打印输出服务器实际返回状态码
+
+		}
+
+}
+
+  catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+</stringProp>
+          </BeanShellPostProcessor>
+          <hashTree/>
+          <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell断言" enabled="false">
+            <stringProp name="BeanShellAssertion.query">import test3.MD5Utils;
+import test3.ThreeDes;
+import org.json.*;
+try {
+		int errval = -1;
+		int staval = -1;
+		int codeint = -1;
+
+		//String key = vars.get(&quot;keyStr&quot;);
+		//String iv = vars.get(&quot;ivStr&quot;);
+
+		//System.out.println(key);
+		//System.out.println(iv);
+		
+  		String res = vars.get(&quot;returnStr&quot;);  //获取服务器返回的字符串
+		System.out.println(res);
+		
+		String code = vars.get(&quot;httpCode&quot;);  //获取服务器返回状态码
+		System.out.println(code);
+		codeint = Integer.parseInt(code);  // 将服务器返回的状态码转为int型
+
+		if(codeint == 200){
+			
+              String response_data = ThreeDes.decode(res, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);   //将服务器返回值解密后存放在response_data
+	         System.out.println(&quot;response_data==&quot;+response_data);
+
+			JSONObject data_obj = new JSONObject(response_data);  //将服务器返回值response_data转换为json格式的对象data_obj
+     		String errno_str = data_obj.get(&quot;errno&quot;).toString(); //获取该json对象的errno
+     		System.out.println(errno_str);
+
+     		errval = Integer.parseInt(errno_str);   //获取到服务器返回的errno转为int
+
+     		JSONObject data_obj1 = data_obj.get(&quot;data&quot;);  //获取data子对象
+     		int len11 = data_obj1.length();  //求得data子对象长度
+
+     		System.out.println(&quot;data length is %d:&quot;);
+     		System.out.println(len11);
+
+     		if(len11 != 0){  // data子对象有数据
+     			//String status_str = data_obj.get(&quot;data&quot;).get(&quot;amount&quot;).toString(); // 获取amount
+     			//int joinLen = status_str.length();
+     			String token_str = data_obj1.get(&quot;token&quot;).toString(); 
+     			System.out.println(&quot;token_str is &quot; + token_str);
+     			//vars.put(&quot;utoken&quot;,token_str);
+  
+     			//System.out.println(&quot;uuuuuuuuuuuu&quot;+vars.get(&quot;utoken&quot;));
+     			
+     			String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+				
+
+     			if( errno_str.equals(err1)){
+     					System.out.println(&quot;pass&quot;);
+     				}
+     			else{
+     					System.out.println(&quot;failed&quot;);
+    			 			Failure = true;
+    			 			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+    			 			System.out.println(jsonStr1);
+    			 			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+     				}
+     		}
+
+     		 else{ //data子对象为空
+     		 		System.out.println(&quot;data is kong.&quot;);
+         			 	String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+
+					if( errno_str.equals(err1)) {
+						System.out.println(&quot;pass&quot;);
+							}
+    					else{
+    	 					System.out.println(&quot;failed&quot;);
+    				 		Failure = true;
+
+    			   			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     					System.out.println(jsonStr1);
+    				 		FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+   		 				} 			 	
+     		 	}	
+			}
+
+		else{
+				System.out.println(&quot;failed&quot;); //服务器返回状态码非200
+     			System.out.println(code); //打印输出服务器实际返回状态码
+    				Failure = true;
+    
+    				String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     			System.out.println(jsonStr1);
+     			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+			
+			}		
+
+		}
+
+  catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+</stringProp>
+            <stringProp name="BeanShellAssertion.filename"></stringProp>
+            <stringProp name="BeanShellAssertion.parameters"></stringProp>
+            <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+          </BeanShellAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="聚合报告" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>true</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>true</responseData>
+                <samplerData>true</samplerData>
+                <xml>true</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>true</responseHeaders>
+                <requestHeaders>true</requestHeaders>
+                <responseDataOnError>true</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <url>true</url>
+                <fileName>true</fileName>
+                <hostname>true</hostname>
+                <threadCounts>true</threadCounts>
+                <sampleCount>true</sampleCount>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="话题搜索" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1500623105000</longProp>
+        <longProp name="ThreadGroup.end_time">1500623105000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="searchtopic" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${key1}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">${host}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/api/friendcirclev2/searchtopic?api_ver=${api_ver}&amp;token=${__P(mytoken,)}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+            <stringProp name="filename">.\datas\friend\searchtopic.dat</stringProp>
+            <stringProp name="fileEncoding">UTF-8</stringProp>
+            <stringProp name="variableNames">jsonString,errnum1,errmsg1</stringProp>
+            <stringProp name="delimiter">\t</stringProp>
+            <boolProp name="quotedData">false</boolProp>
+            <boolProp name="recycle">false</boolProp>
+            <boolProp name="stopThread">true</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell PreProcessor" enabled="true">
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="script">import test3.MD5Utils;
+import test3.ThreeDes;
+
+try {
+		String jsonStr = vars.get(&quot;jsonString&quot;); 
+		System.out.println(&quot;request_data==&quot;+jsonStr);
+		vars.put(&quot;jsonStr&quot;,jsonStr);  //将请求的json串保存到jsonStr变量中
+    
+          	
+		String uid =vars.get(&quot;uid&quot;);
+		String token =vars.get(&quot;utoken&quot;);
+
+		
+		//String token =  ${__P(utoken,)};
+
+		System.out.println(&quot;utoken is &quot; + token);
+	
+		String md5 = MD5Utils.md5(uid + &quot;XgYsd_JVBs+!@#$%Nfd+_-1jjb!//^&amp;*()&quot; + token);
+	   	String key = md5.substring(0, 24);
+		String iv = md5.substring(24, 32);
+
+     	String secretArr = ThreeDes.encode(jsonStr, key, iv);
+	
+		//	log.info(&quot;something&quot;);
+		//	log.error(&quot;something else&quot;);
+
+   		System.out.println(&quot;key==&quot;+key);
+		System.out.println(&quot;iv==&quot;+iv);
+
+		vars.put(&quot;keyStr&quot;,key);
+		vars.put(&quot;ivStr&quot;,iv);
+	
+		System.out.println(secretArr);
+		vars.put(&quot;key1&quot;,secretArr);
+	
+}
+
+catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+
+</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">returnStr</stringProp>
+            <stringProp name="RegexExtractor.regex">(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="正则表达式提取器" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">code</stringProp>
+            <stringProp name="RegexExtractor.refname">httpCode</stringProp>
+            <stringProp name="RegexExtractor.regex">^(.*)$</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <BeanShellAssertion guiclass="BeanShellAssertionGui" testclass="BeanShellAssertion" testname="BeanShell断言" enabled="true">
+            <stringProp name="BeanShellAssertion.query">import test3.MD5Utils;
+import test3.ThreeDes;
+import org.json.*;
+try {
+		int errval = -1;
+		int staval = -1;
+		int codeint = -1;
+
+		String key = vars.get(&quot;keyStr&quot;);
+		String iv = vars.get(&quot;ivStr&quot;);
+
+		//System.out.println(key);
+		//System.out.println(iv);
+		
+  		String res = vars.get(&quot;returnStr&quot;);  //获取服务器返回的字符串
+		System.out.println(res);
+		
+		String code = vars.get(&quot;httpCode&quot;);  //获取服务器返回状态码
+		System.out.println(code);
+		codeint = Integer.parseInt(code);  // 将服务器返回的状态码转为int型
+
+		if(codeint == 200){
+			String response_data = ThreeDes.decode(res, key, iv);   //将服务器返回值解密后存放在response_data
+			System.out.println(&quot;response_data==&quot;+response_data);
+
+			JSONObject data_obj = new JSONObject(response_data);  //将服务器返回值response_data转换为json格式的对象data_obj
+     		String errno_str = data_obj.get(&quot;errno&quot;).toString(); //获取该json对象的errno
+     		System.out.println(errno_str);
+
+     		String errmsg_str = data_obj.get(&quot;errmsg&quot;).toString();
+     		System.out.println(errmsg_str);
+
+     		errval = Integer.parseInt(errno_str);   //获取到服务器返回的errno转为int
+
+     		JSONObject data_obj1 = data_obj.get(&quot;data&quot;);  //获取data子对象
+     		int len11 = data_obj1.length();  //求得data子对象长度
+
+     		System.out.println(&quot;data length is %d:&quot;);
+     		System.out.println(len11);
+
+     		if(len11 != 0){  // data子对象有数据
+     			String topiclist_str = data_obj.get(&quot;data&quot;).get(&quot;topiclist&quot;).toString(); // 获取topiclist
+     			System.out.println(topiclist_str);
+     			//int topiclistLen = topiclist_str.length();
+     			
+     			String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+				String msg1 = vars.get(&quot;errmsg1&quot;); //获取到预期结果errmsg
+
+     			if( (errno_str.equals(err1)) &amp;&amp; (errmsg_str.equals(msg1))){
+     					System.out.println(&quot;pass&quot;);
+     				}
+     			else{
+     					System.out.println(&quot;failed&quot;);
+    			 			Failure = true;
+    			 			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+    			 			System.out.println(jsonStr1);
+    			 			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+     				}
+     		}
+
+     		 else{ //data子对象为空
+     		 		System.out.println(&quot;data is kong.&quot;);
+         			 	String err1 = vars.get(&quot;errnum1&quot;); //获取到预期结果errno
+         			 	String msg1 = vars.get(&quot;errmsg1&quot;); //获取到预期结果errmsg
+
+					if((errno_str.equals(err1)) &amp;&amp; (errmsg_str.equals(msg1))) {
+						System.out.println(&quot;pass&quot;);
+							}
+    					else{
+    	 					System.out.println(&quot;failed&quot;);
+    				 		Failure = true;
+
+    			   			String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     					System.out.println(jsonStr1);
+    				 		FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+   		 				} 			 	
+     		 	}	
+			}
+
+		else{
+				System.out.println(&quot;failed&quot;); //服务器返回状态码非200
+     			System.out.println(code); //打印输出服务器实际返回状态码
+    				Failure = true;
+    
+    				String jsonStr1 =  vars.get(&quot;jsonStr&quot;);
+     			System.out.println(jsonStr1);
+     			FailureMessage = &quot;errno value expected to be: 200, but failed to be &quot;+ code +&quot;. The JsonString is:&quot;+jsonStr1;
+			
+			}		
+
+		}
+
+  catch (Throwable ex) {
+    log.error(&quot;Failed to do this or that&quot;, ex);
+}
+</stringProp>
+            <stringProp name="BeanShellAssertion.filename"></stringProp>
+            <stringProp name="BeanShellAssertion.parameters"></stringProp>
+            <boolProp name="BeanShellAssertion.resetInterpreter">false</boolProp>
+          </BeanShellAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="聚合报告" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="察看结果树" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>true</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>true</responseData>
+              <samplerData>true</samplerData>
+              <xml>true</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>true</responseHeaders>
+              <requestHeaders>true</requestHeaders>
+              <responseDataOnError>true</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <url>true</url>
+              <fileName>true</fileName>
+              <hostname>true</hostname>
+              <threadCounts>true</threadCounts>
+              <sampleCount>true</sampleCount>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
