@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>testDemo</groupId>
-    <artifactId>bluemoon</artifactId>
-    <version>1.11</version>
+    <groupId>com.hulu</groupId>
+    <artifactId>interface-test</artifactId>
+    <version>1.0</version>
 
     <name>iFme interface test</name>
     <url>http://maven.apache.org</url>
@@ -62,7 +62,7 @@
     </pluginRepositories>
 
     <build>
-        <finalName>bluemoon</finalName>
+        <finalName>interface-test</finalName>
         <plugins>
             <plugin>
                 <groupId>com.lazerycode.jmeter</groupId>
@@ -171,6 +171,14 @@
                             <mainClass>theMainClass</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>

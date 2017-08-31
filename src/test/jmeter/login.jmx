@@ -36,7 +36,7 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">10</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -92,10 +92,9 @@
             <stringProp name="script">import com.hulu.util.*;
 
 try {
-
-     log.info("1111111111111111111111111111111111111111111111111111...");
+	log.info(&quot;hello..................................123&quot;);
      String jsonStr = vars.get(&quot;jsonString&quot;); 
-     System.out.println(&quot;request_data==&quot;+jsonStr);
+     log.info(&quot;request_data==&quot;+jsonStr);
 
      String secretArr = ThreeDes.encode(jsonStr, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);
 	System.out.println(secretArr);
@@ -144,7 +143,7 @@ try {
 		//System.out.println(iv);
 		
   		String res = vars.get(&quot;returnStr&quot;);  //获取服务器返回的字符串
-		System.out.println(res);
+		log.info(&quot;returnStr====&quot;+res);
 		
 		String code = vars.get(&quot;httpCode&quot;);  //获取服务器返回状态码
 		System.out.println(code);
@@ -153,7 +152,7 @@ try {
 		if(codeint == 200){
 			
               String response_data = ThreeDes.decode(res, &quot;qwert12345^&amp;*()ZXCVB!@#$&quot;, &quot;P_+@*szp&quot;);   //将服务器返回值解密后存放在response_data
-	         System.out.println(&quot;response_data==&quot;+response_data);
+	         log.info(&quot;response_data==&quot;+response_data);
 
 			JSONObject data_obj = new JSONObject(response_data);  //将服务器返回值response_data转换为json格式的对象data_obj
      		String errno_str = data_obj.get(&quot;errno&quot;).toString(); //获取该json对象的errno
