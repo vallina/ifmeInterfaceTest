@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
+import java.util.concurrent.FutureTask;
 
 public class Main {
 
@@ -38,6 +40,9 @@ public class Main {
 
             System.out.println("-----------------------------------------------------------");
         }
+
+        Callable callable;
+        FutureTask futureTask;
 
     }
 
